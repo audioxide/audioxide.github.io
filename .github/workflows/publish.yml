@@ -24,7 +24,7 @@ jobs:
     - run: yarn && yarn build-storybook
       working-directory: website
       env:
-        GITHUB_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REGISTRY_TOKEN: ${{ secrets.REGISTRY_RETRIEVAL_TOKEN }}
     - run: git checkout --orphan gh-pages && git reset && git clean -fd
       working-directory: repo
     - run: mv ./website/storybook-static/* ./repo
