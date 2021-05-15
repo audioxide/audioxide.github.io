@@ -1,0 +1,36 @@
+# This workflow will generate and publish the Audioxide Storybook
+name: Publish Audioxide Storybook
+
+on:
+  repository_dispatch:
+    types: [new-commit]
+
+jobs:
+  generate-and-deploy:
+    name: Generate and Deploy
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Checkout website repository
+      uses: actions/checkout@v2
+      with:
+        repository: audioxide/website
+        path: website
+    - name: Checkout this repository
+      uses: actions/checkout@v2
+      with:
+        path: repo
+    - run: yarn && yarn build-storybook
+      working-directory: website
+      env:
+        GITHUB_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: git checkout --orphan gh-pages && git reset && git clean -fd
+      working-directory: repo
+    - run: mv ./website/storybook-static/* ./repo
+    - name: Commit & Push changes
+      uses: actions-js/push@master
+      with:
+        directory: repo
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages
+        force: true
