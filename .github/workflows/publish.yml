@@ -4,6 +4,7 @@ name: Publish Audioxide Storybook
 on:
   repository_dispatch:
     types: [new-commit]
+  workflow_dispatch:
 
 jobs:
   generate-and-deploy:
